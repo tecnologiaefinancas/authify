@@ -5,7 +5,9 @@ import com.tecnologiaefinancas.authify.io.ProfileRequest;
 import com.tecnologiaefinancas.authify.io.ProfileResponse;
 import com.tecnologiaefinancas.authify.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -18,8 +20,12 @@ public class ProfileServiceImpl implements ProfileService{
     @Override
     public ProfileResponse createProfile(ProfileRequest request) {
         UserEntity newProfile = convertToUserEntity(request);
-        userRepository.save(newProfile);
-        return convertToProfileResponse(newProfile);
+        if (!userRepository.existsByEmail(request.getEmail())) {
+            userRepository.save(newProfile);
+            return convertToProfileResponse(newProfile);
+        }
+
+        throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
     }
 
     private ProfileResponse convertToProfileResponse(UserEntity newProfile) {
