@@ -6,6 +6,7 @@ import com.tecnologiaefinancas.authify.io.ProfileResponse;
 import com.tecnologiaefinancas.authify.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,6 +17,8 @@ import java.util.UUID;
 public class ProfileServiceImpl implements ProfileService{
 
     private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public ProfileResponse createProfile(ProfileRequest request) {
@@ -43,7 +46,7 @@ public class ProfileServiceImpl implements ProfileService{
                 .email(request.getEmail())
                 .userId(UUID.randomUUID().toString())
                 .name(request.getName())
-                .password(request.getPassword()) // Later we are going to encode it
+                .password(passwordEncoder.encode(request.getPassword()))
                 .isAccountVerified(false)
                 .resetOtpExpireAt(0L)
                 .verifyOtp(null)
