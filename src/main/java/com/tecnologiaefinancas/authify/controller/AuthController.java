@@ -3,6 +3,7 @@ package com.tecnologiaefinancas.authify.controller;
 import com.tecnologiaefinancas.authify.io.AuthRequest;
 import com.tecnologiaefinancas.authify.io.AuthResponse;
 import com.tecnologiaefinancas.authify.service.AppUserDetailsService;
+import com.tecnologiaefinancas.authify.service.ProfileService;
 import com.tecnologiaefinancas.authify.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -15,10 +16,8 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -33,6 +32,8 @@ public class AuthController{
     private final AppUserDetailsService appUserDetailsService;
 
     private final JwtUtil jwtUtil;
+
+    private final ProfileService profileService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
@@ -73,6 +74,15 @@ public class AuthController{
     @GetMapping("/is-authenticated")
     public ResponseEntity<Boolean> isAuthenticated(@CurrentSecurityContext(expression = "authentication?.name") String email){
         return ResponseEntity.ok(email !=null);
+    }
+
+    @PostMapping("/send-reset-otp")
+    public void sendResetOtp(@RequestParam String email){
+        try {
+            profileService.sendResetOtp(email);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
     }
 
 }
