@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -49,10 +50,10 @@ public class ProfileServiceImpl implements ProfileService{
         UserEntity existingEntity = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
         // Generate 6 digits OTP
-        String otp = String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
+        String otp = generate6DigitsOtp();
 
         // Calculate expiry time (current time + 15 minutes in milliseconds)
-        long expiryTime = System.currentTimeMillis() + (15 * 60 * 1000);
+        long expiryTime = calculate15MinutesExpiryTime();
 
         //Update the profile/user
         existingEntity.setResetOtp(otp);
@@ -86,6 +87,58 @@ public class ProfileServiceImpl implements ProfileService{
         existingUser.setResetOtpExpireAt(0L);
 
         userRepository.save(existingUser);
+    }
+
+    @Override
+    public void sendOtp(String email) {
+        UserEntity existingUser = userRepository.findByEmail(email)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
+
+        if (existingUser.getIsAccountVerified() != null && existingUser.getIsAccountVerified()) {
+            return;
+        }
+
+        // Generate 6 digit OTP
+        String otp = generate6DigitsOtp();
+
+        long expiryTime = calculate24HoursExpiryTime();
+
+        existingUser.setVerifyOtp(otp);
+        existingUser.setVerifyOtpExpireAt(expiryTime);
+
+        userRepository.save(existingUser);
+
+        try{
+            emailService.sendOtpEmail(existingUser.getEmail(), otp);
+        } catch (Exception ex) {
+            throw new RuntimeException("Unable to send e-mail.");
+        }
+    }
+
+    @Override
+    public void verifyOtp(String email, String otp) {
+
+    }
+
+    @Override
+    public String getLoggedInUserId(String email) {
+        UserEntity existingUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
+        return existingUser.getUserId();
+    }
+
+    private String generate6DigitsOtp(){
+        return String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
+    }
+
+    private long calculate15MinutesExpiryTime(){
+        // Calculate expiry time (current time + 15 minutes in milliseconds)
+        return System.currentTimeMillis() + (15 * 60 * 1000);
+    }
+
+    private long calculate24HoursExpiryTime(){
+        // Calculate expiry time (current time + 24 hours in milliseconds)
+        return System.currentTimeMillis() + (24 * 60 * 60 * 1000);
     }
 
     private ProfileResponse convertToProfileResponse(UserEntity newProfile) {
