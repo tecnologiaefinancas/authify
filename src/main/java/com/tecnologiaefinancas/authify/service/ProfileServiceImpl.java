@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -117,7 +118,29 @@ public class ProfileServiceImpl implements ProfileService{
 
     @Override
     public void verifyOtp(String email, String otp) {
+    UserEntity existingUser = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
+        if(existingUser.getVerifyOtp() == null || !existingUser.getVerifyOtp().equals(otp)) {
+            throw new RuntimeException("Invalid OTP");
+        }
+
+        /*
+        if (existingUser.getResetOtpExpireAt() < System.currentTimeMillis()) {
+            throw new RuntimeException("OTP expired");
+        }*/
+
+        if (Instant.ofEpochMilli(existingUser.getVerifyOtpExpireAt()).isBefore(Instant.now())) {
+            throw new RuntimeException("OTP expired");
+        }
+
+        existingUser.setIsAccountVerified(true);
+        existingUser.setVerifyOtp(null);
+        existingUser.setVerifyOtpExpireAt(0L);
+
+
+
+        userRepository.save(existingUser);
     }
 
     @Override
