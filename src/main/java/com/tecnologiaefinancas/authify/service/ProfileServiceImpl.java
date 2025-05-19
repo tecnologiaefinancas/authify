@@ -143,13 +143,6 @@ public class ProfileServiceImpl implements ProfileService{
         userRepository.save(existingUser);
     }
 
-    @Override
-    public String getLoggedInUserId(String email) {
-        UserEntity existingUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
-        return existingUser.getUserId();
-    }
-
     private String generate6DigitsOtp(){
         return String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
     }
