@@ -1,7 +1,7 @@
 
 ## Authify - Backend Only
 
-<a href="https://www.linkedin.com/in/natalia-feitosa-cga-cfp" target="_blank" style="text-decoration:none">
+<a href="https://www.linkedin.com/in/natalia-feitosa-tf" target="_blank" style="text-decoration:none">
     <img src="https://img.shields.io/badge/LinkedIn-000000?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
 </a>
 
