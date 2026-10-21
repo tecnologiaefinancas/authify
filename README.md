@@ -2,11 +2,13 @@
 >
 > **Spring stack:** Spring Boot 3.4 · Spring Security (stateless sessions, custom `OncePerRequestFilter`, BCrypt, CORS config) · Spring Data JPA + MySQL · Spring Validation · Spring Mail (Brevo SMTP) · JJWT · Lombok
 >
-> **Level at the time, by topic:** Spring Security & JWT: Junior · Email OTP & password reset flows: Junior · Automated testing: Mid
+> **Level at the time, by topic:** Spring Security & JWT: Junior · Email OTP & password reset flows: Junior · Automated testing: Mid _(not explored in this project, as it wasn't the focus)_
 >
 > **Why it's public:** this repository is kept public solely to document my professional evolution over the years, for clients and interviewers. It is a reference implementation of a stateless authentication service: JWT in an httpOnly cookie, email OTP verification and password reset.
 >
-> <sub>Levels: **Entry** = first use, following references · **Junior** = implemented on my own and working · **Mid** = independent, with tests and trade-offs.</sub>
+> **Project status:** complete. Built purely for practice and learning.
+>
+> <sub>Levels: **Entry** = following references · **Junior** = implemented on my own and working · **Mid** = independent, with tests and trade-offs.</sub>
 
 ## Authify - Backend Only
 
