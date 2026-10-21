@@ -1,3 +1,12 @@
+> **Portfolio note** · Built Apr–Dec 2025 · Self-assessed in Oct 2026
+>
+> **Spring stack:** Spring Boot 3.4 · Spring Security (stateless sessions, custom `OncePerRequestFilter`, BCrypt, CORS config) · Spring Data JPA + MySQL · Spring Validation · Spring Mail (Brevo SMTP) · JJWT · Lombok
+>
+> **Level at the time, by topic:** Spring Security & JWT: Junior · Email OTP & password reset flows: Junior · Automated testing: Mid
+>
+> **Why it's public:** this repository is kept public solely to document my professional evolution over the years, for clients and interviewers. It is a reference implementation of a stateless authentication service: JWT in an httpOnly cookie, email OTP verification and password reset.
+>
+> <sub>Levels: **Entry** = first use, following references · **Junior** = implemented on my own and working · **Mid** = independent, with tests and trade-offs.</sub>
 
 ## Authify - Backend Only
 
@@ -6,7 +15,7 @@
 </a>
 
 ## Overview
-This is a **Java 21** application built with **Spring Boot**, designed to handle authentication and security services. 
+This is a **Java 17** application built with **Spring Boot**, designed to handle authentication and security services. 
 
 The backend provides powerful APIs for authentication and authorization, integrating the following technologies.
 
@@ -25,7 +34,7 @@ This project is designed to function as a **microservices-based authentication s
 ## Prerequisites
 To set up this project, ensure you have the following installed:
 
-- **Java 21**
+- **Java 17**
 - **Maven**
 - **MySQL** (running locally or configured remotely)
 
@@ -62,7 +71,7 @@ mvn spring-boot:run
 ```
 
 ## Technology Stack
-- **Java 21**
+- **Java 17**
 - **Spring Boot**
     - Spring Data JPA
     - Spring Web
